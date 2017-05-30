@@ -10,9 +10,7 @@ namespace dotNetCoreDemo {
                 using (var sr = new StreamReader (fs)) {
                     string line;
                     while ((line = sr.ReadLine ()) != null) {
-                        // process the line
-
-                        readNode(line);
+                        ReadNode(line);
                         Console.WriteLine(line);
                     }
                 }
@@ -20,7 +18,14 @@ namespace dotNetCoreDemo {
           
         }
 
-        public static bool readNode(String node) {
+        public static bool ReadNode(String node) {
+            var delimiters = new char[] {'\t'};
+            var items = node.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in items)
+            {
+                Console.WriteLine(item);
+            }
+
             return true;
         }
     }
