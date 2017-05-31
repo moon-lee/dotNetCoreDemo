@@ -4,62 +4,81 @@ using System.Xml;
 
 namespace dotNetCoreDemo {
     class Program {
-        static void Main (string[] args) {
-
-            // string datafile = "PanoData.csv";
-            string path = @"/home/moon/Documents/Telstra_Demo/MyPanoDemo/PanoDataTemplate.csv";
-
+        static void Main (string[] args)
+        {
             XmlDocument xmlDoc = new XmlDocument();
 
-            using (var fs = new FileStream (path, FileMode.Open, FileAccess.ReadWrite)) {
-                using (var sr = new StreamReader (fs)) {
-                    
-                    string line;
+            XmlNode newNode = CreateNewPanoProjectFile(xmlDoc);
 
+            XmlNode oldNode = GetPanoTemplate();
+
+            WritePanoProjectFile(xmlDoc, newNode, oldNode);
+
+        }
+
+        static XmlNode GetPanoTemplate()
+        {
+            string path = @"GeneratedPanoProjectDemo.p2vr";
+            XmlDocument tempXml = new XmlDocument();
+            XmlNode oldNode;
+
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
+            {
+                using (var sr = new StreamReader(fs))
+                {
+
+                    tempXml.Load(sr);
+
+                    XmlElement oldRootNode = tempXml.DocumentElement;
+                    oldNode = oldRootNode.SelectSingleNode("panorama");
+
+                }
+            }
+
+           return oldNode;
+        }
+
+        static XmlNode CreateNewPanoProjectFile(XmlDocument xmlDoc)
+        {
+            string path = @"PanoDataTemplate.csv";
+
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
+            {
+                using (var sr = new StreamReader(fs))
+                {
+                    string line;
                     // Create Root Node 
-                    XmlNode rootNode = xmlDoc.CreateElement("tour");
-                    rootNode.InnerXml = "<start>node1</start>";
-                    xmlDoc.AppendChild(rootNode);
+                    //XmlNode rootNode = xmlDoc.CreateElement("newPano");
+                    XmlNode childRootNode = xmlDoc.CreateElement("tour");
+
+                    // xmlDoc.AppendChild(rootNode);
 
                     Panodata pd = new Panodata();
 
                     // Skip First Line 
                     sr.ReadLine();
 
-                    while ((line = sr.ReadLine ()) != null) {
+                    while ((line = sr.ReadLine()) != null)
+                    {
                         pd = ReadPanoData(pd, line);
-                        xmlDoc = GeneratePanoXml(xmlDoc, pd);
+                        //childNodes = GeneratePanoXml(xmlDoc, pd);
+                        childRootNode.AppendChild(GeneratePanoXml(xmlDoc, pd));
+
                     }
 
+                    //rootNode.AppendChild(childRootNode);
 
-                    // Console.WriteLine(xmlDoc.DocumentElement.OuterXml);
-                    
-                    // using (var fs1 = new FileStream (pathTemp, FileMode.Open, FileAccess.ReadWrite)) {
-                    //     using (var sr1 = new StreamReader (fs1)) {
-                    //         // Load xml
-
-                    //         tempXml.Load(sr1);
-
-                    //         XmlNode tourNode;
-
-                    //         XmlElement oldRootNode = tempXml.DocumentElement;
-                    //         tourNode = oldRootNode.SelectSingleNode("tour");
-
-                    //         tempXml.ReplaceChild(newNode, tourNode);
-
-                    //     }
-                    // }
+                    //Console.WriteLine(rootNode.OuterXml);
 
 
-
-                    WriteXmlfile(xmlDoc);
+                    return childRootNode;
+                    // WriteXmlfile(xmlDoc);
 
                 }
             }
-        
         }
 
-       static Panodata ReadPanoData(Panodata pd, String panodata) {
+        static Panodata ReadPanoData(Panodata pd, String panodata) {
 
             var delimiters = new char[] {'\t'};
             var items = panodata.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
@@ -89,9 +108,15 @@ namespace dotNetCoreDemo {
 
         }
 
-        static XmlDocument GeneratePanoXml(XmlDocument xmlDoc, Panodata pd) {
+        static XmlNode GeneratePanoXml(XmlDocument xmlDoc, Panodata pd) {
 
-            XmlNode childRootNode = xmlDoc.CreateElement("panorama");
+            // XmlNode childRootNode = xmlDoc.CreateElement("tour");
+
+            XmlNode childNodes = xmlDoc.CreateElement("panorama");
+
+            //Start
+            XmlNode startNode = xmlDoc.CreateElement("start");
+            startNode.InnerText = "node1";
 
             XmlNode panoId = xmlDoc.CreateElement("id");
             panoId.InnerText = pd.nodeId;
@@ -129,20 +154,21 @@ namespace dotNetCoreDemo {
             
             hotspotsNode.InnerXml = spotxml;
 
-            childRootNode.AppendChild(panoId);
-            childRootNode.AppendChild(inputNode);
-            childRootNode.AppendChild(viewParam);
-            childRootNode.AppendChild(userdataNode);
-            childRootNode.AppendChild(hotspotsNode);
+            childNodes.AppendChild(startNode);
+            childNodes.AppendChild(panoId);
+            childNodes.AppendChild(inputNode);
+            childNodes.AppendChild(viewParam);
+            childNodes.AppendChild(userdataNode);
+            childNodes.AppendChild(hotspotsNode);
 
-            xmlDoc.DocumentElement.AppendChild(childRootNode);
-
-            return xmlDoc;
+            return childNodes;
         }
 
         static void WriteXmlfile(XmlDocument xmlDoc)
         {
-            using (var fs = new FileStream("test.xml", FileMode.Create, FileAccess.ReadWrite))
+            string path = @"text.xml";
+
+            using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite))
             {
                 using (var sr = new StreamWriter(fs))
                 {
@@ -155,32 +181,17 @@ namespace dotNetCoreDemo {
         }    
 
 
-        static void WritePanoProjectFile(XmlNode newNode) {
-
-            string path = @"/home/moon/Documents/Telstra_Demo/MyPanoDemo/GeneratedPanoProjectDemo.p2vr";
-            XmlDocument tempXml = new XmlDocument();
-
-            using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
-            {
-                using (var sr = new StreamReader(fs))
-                {
-
-                    tempXml.Load(sr);
-
-                    XmlNode tourNode;
-
-                    XmlElement oldRootNode = tempXml.DocumentElement;
-                    tourNode = oldRootNode.SelectSingleNode("tour");
-
-                    tempXml.ReplaceChild(newNode, tourNode);
-
-                    XmlWriterSettings settings = new XmlWriterSettings();
-                    settings.Indent = true;
-                    XmlWriter writer = XmlWriter.Create(sr, settings);
-                    tempXml.WriteTo(writer);
-                }
-            }
+        static void WritePanoProjectFile(XmlDocument xmlDoc, XmlNode newNode, XmlNode oldNode) {
             
+            //string oldNodeXml = oldNode.InnerXml;
+
+            XmlNode newPanoram = xmlDoc.CreateElement("panorama");
+            newPanoram.InnerXml = oldNode.InnerXml;
+
+            xmlDoc.AppendChild(newNode);
+
+            xmlDoc.DocumentElement.AppendChild(newPanoram);
+            WriteXmlfile(xmlDoc);
         }
 
     }
