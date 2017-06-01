@@ -93,6 +93,9 @@ namespace genPano2vr
             pd.fwdNode = items[10]; 
             pd.bwdNode = items[11]; 
 
+            pd.leftNode = items[12]; 
+            pd.rightNode = items[13]; 
+
             Console.WriteLine("Node Id :{0}",pd.nodeId);
             // Console.WriteLine("Image filename :{0}",pd.filename);
             // Console.WriteLine("Pano Title :{0}",pd.title);
@@ -142,11 +145,11 @@ namespace genPano2vr
             }
             if (pd.leftSpot)
             {
-                spotxml += pd.leftXml;
+                spotxml += String.Format(pd.leftXml, pd.leftNode);
             }
             if (pd.rightSpot)
             {
-                spotxml += pd.rightXml;
+                spotxml += String.Format(pd.rightXml, pd.rightNode);
             }
 
             hotspotsNode.InnerXml = spotxml;
@@ -189,17 +192,19 @@ namespace genPano2vr
         public Boolean backwardSpot;
         public Boolean leftSpot;
         public Boolean rightSpot;
-
         public string fwdNode;
-
         public string bwdNode;
+        public string leftNode;
+        public string rightNode;
+
+
 
         public string fwdXml = "<hotspot><position><pan>0.00</pan><tilt>-35.00</tilt></position><polygon/><type>point</type><id>FwdPoint</id><linktype>node</linktype><url>{{{0}}}</url><target>$fwd</target><skinid>ht_node_forward</skinid></hotspot>";
 
         public string bwdXml = "<hotspot><position><pan>180.00</pan><tilt>-35.00</tilt></position><polygon/><type>point</type><id>BwdPoint</id><linktype>node</linktype><url>{{{0}}}</url><target>$fwd</target><skinid>ht_node_forward</skinid></hotspot>";
 
-        public string leftXml = "<hotspot><position><pan>90.00</pan><tilt>-35.00</tilt></position><polygon/><type>point</type><id>leftPoint</id><linktype>node</linktype><target>$fwd</target><skinid>ht_node_forward</skinid></hotspot>";
-        public string rightXml = "<hotspot><position><pan>-90.00</pan><tilt>-35.00</tilt></position><polygon/><type>point</type><id>rightPoint</id><linktype>node</linktype><target>$fwd</target><skinid>ht_node_forward</skinid></hotspot>";
+        public string leftXml = "<hotspot><position><pan>90.00</pan><tilt>-35.00</tilt></position><polygon/><type>point</type><id>leftPoint</id><linktype>node</linktype><url>{{{0}}}</url><target>$fwd</target><skinid>ht_node_forward</skinid></hotspot>";
+        public string rightXml = "<hotspot><position><pan>-90.00</pan><tilt>-35.00</tilt></position><polygon/><type>point</type><id>rightPoint</id><linktype>node</linktype><url>{{{0}}}</url><target>$fwd</target><skinid>ht_node_forward</skinid></hotspot>";
 
     }
 

@@ -148,7 +148,7 @@
           <type>point</type>
           <id>FwdPoint</id>
           <linktype>node</linktype>
-          <url>{0}</url>
+          <url>{node3}</url>
           <target>$fwd</target>
           <skinid>ht_node_forward</skinid>
         </hotspot>
@@ -199,6 +199,7 @@
           <type>point</type>
           <id>rightPoint</id>
           <linktype>node</linktype>
+          <url>{node9}</url>
           <target>$fwd</target>
           <skinid>ht_node_forward</skinid>
         </hotspot>
@@ -351,6 +352,237 @@
           <type>point</type>
           <id>rightPoint</id>
           <linktype>node</linktype>
+          <url>{node12}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+      </hotspots>
+    </panorama>
+    <panorama>
+      <id>node9</id>
+      <input>
+        <type>auto</type>
+        <filename>equi/f-b2/DSCN0724.JPG</filename>
+      </input>
+      <viewingparameter>
+        <pan>
+          <start>0</start>
+        </pan>
+        <tilt>
+          <start>0</start>
+        </tilt>
+        <fov>
+          <start>100</start>
+        </fov>
+        <panonorth>0</panonorth>
+        <projection>rectilinear</projection>
+      </viewingparameter>
+      <userdata>
+        <title>1st Floor - B2 - Equipment Room - Suite 37/38-1</title>
+      </userdata>
+      <hotspots>
+        <hotspot>
+          <position>
+            <pan>0.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>FwdPoint</id>
+          <linktype>node</linktype>
+          <url>{node10}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+        <hotspot>
+          <position>
+            <pan>90.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>leftPoint</id>
+          <linktype>node</linktype>
+          <url>{node5}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+        <hotspot>
+          <position>
+            <pan>-90.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>rightPoint</id>
+          <linktype>node</linktype>
+          <url>{0}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+      </hotspots>
+    </panorama>
+    <panorama>
+      <id>node10</id>
+      <input>
+        <type>auto</type>
+        <filename>equi/f-b2/DSCN0725.JPG</filename>
+      </input>
+      <viewingparameter>
+        <pan>
+          <start>0</start>
+        </pan>
+        <tilt>
+          <start>0</start>
+        </tilt>
+        <fov>
+          <start>100</start>
+        </fov>
+        <panonorth>0</panonorth>
+        <projection>rectilinear</projection>
+      </viewingparameter>
+      <userdata>
+        <title>1st Floor - B2 - Equipment Room - Suite 37/38-2</title>
+      </userdata>
+      <hotspots>
+        <hotspot>
+          <position>
+            <pan>0.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>FwdPoint</id>
+          <linktype>node</linktype>
+          <url>{node11}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+        <hotspot>
+          <position>
+            <pan>180.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>BwdPoint</id>
+          <linktype>node</linktype>
+          <url>{node9}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+      </hotspots>
+    </panorama>
+    <panorama>
+      <id>node11</id>
+      <input>
+        <type>auto</type>
+        <filename>equi/f-b2/DSCN0726.JPG</filename>
+      </input>
+      <viewingparameter>
+        <pan>
+          <start>0</start>
+        </pan>
+        <tilt>
+          <start>0</start>
+        </tilt>
+        <fov>
+          <start>100</start>
+        </fov>
+        <panonorth>0</panonorth>
+        <projection>rectilinear</projection>
+      </viewingparameter>
+      <userdata>
+        <title>1st Floor - B2 - Equipment Room - Suite 37/38-3</title>
+      </userdata>
+      <hotspots>
+        <hotspot>
+          <position>
+            <pan>0.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>FwdPoint</id>
+          <linktype>node</linktype>
+          <url>{node12}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+        <hotspot>
+          <position>
+            <pan>180.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>BwdPoint</id>
+          <linktype>node</linktype>
+          <url>{node10}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+      </hotspots>
+    </panorama>
+    <panorama>
+      <id>node12</id>
+      <input>
+        <type>auto</type>
+        <filename>equi/f-b2/DSCN0727.JPG</filename>
+      </input>
+      <viewingparameter>
+        <pan>
+          <start>180</start>
+        </pan>
+        <tilt>
+          <start>0</start>
+        </tilt>
+        <fov>
+          <start>100</start>
+        </fov>
+        <panonorth>0</panonorth>
+        <projection>rectilinear</projection>
+      </viewingparameter>
+      <userdata>
+        <title>1st Floor - B2 - Equipment Room - Suite 37/38-4</title>
+      </userdata>
+      <hotspots>
+        <hotspot>
+          <position>
+            <pan>180.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>BwdPoint</id>
+          <linktype>node</linktype>
+          <url>{node11}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+        <hotspot>
+          <position>
+            <pan>90.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>leftPoint</id>
+          <linktype>node</linktype>
+          <url>{node8}</url>
+          <target>$fwd</target>
+          <skinid>ht_node_forward</skinid>
+        </hotspot>
+        <hotspot>
+          <position>
+            <pan>-90.00</pan>
+            <tilt>-35.00</tilt>
+          </position>
+          <polygon />
+          <type>point</type>
+          <id>rightPoint</id>
+          <linktype>node</linktype>
+          <url>{0}</url>
           <target>$fwd</target>
           <skinid>ht_node_forward</skinid>
         </hotspot>
