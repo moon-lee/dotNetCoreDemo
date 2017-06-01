@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/dotNetCoreDemo.csproj"
+                "${workspaceRoot}/genPano2vr.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

@@ -1,0 +1,9 @@
+Index,id,filename,title,panonorth,view_pan,forword,backword,left,right,fwdNode,BwdNode
+1,node1,equi/f-b2/DSCN0287.JPG,1st Floor - B2 – Ladies Toilet,0,0,FALSE,FALSE,FALSE,FALSE,0,0
+2,node2,equi/f-b2/DSCN0286.JPG,1st Floor - B2 – Hallway-1,0,180,FALSE,TRUE,FALSE,FALSE,0,node3
+3,node3,equi/f-b2/DSCN0288.JPG,1st Floor - B2 – Hallway-2,0,180,TRUE,TRUE,FALSE,FALSE,node2,node4
+4,node4,equi/f-b2/DSCN0289.JPG,1st Floor - B2 – Hallway-3,0,180,TRUE,FALSE,FALSE,FALSE,0,0
+5,node5,equi/f-b2/DSCN0720.JPG,1st Floor - B2 – Equipment Room – Suite 36-1,0,0,TRUE,FALSE,FALSE,TRUE,node6,0
+6,node6,equi/f-b2/DSCN0721.JPG,1st Floor - B2 – Equipment Room – Suite 36-2,0,0,TRUE,TRUE,FALSE,FALSE,node7,node5
+7,node7,equi/f-b2/DSCN0722.JPG,1st Floor - B2 – Equipment Room – Suite 36-3,0,0,TRUE,TRUE,FALSE,FALSE,node8,node6
+8,node8,equi/f-b2/DSCN0723.JPG,1st Floor - B2 – Equipment Room – Suite 36-4,0,180,FALSE,TRUE,FALSE,TRUE,0,node7
