@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml;
 
-namespace genPano2vr
+namespace genPanoSkin
 {
     class Program
     {
@@ -19,8 +19,6 @@ namespace genPano2vr
             XmlNode newTourNode = CreateNewPanoProjectFile(xmlDoc);
 
             oldTourNode.ParentNode.ReplaceChild(newTourNode, oldTourNode);
-
-            // Console.WriteLine (xmlDoc.OuterXml);
 
             WriteXmlfile(xmlDoc);
 

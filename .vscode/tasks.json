@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/genPano2vr.csproj"
+                "${workspaceRoot}/genPanoSkin.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
