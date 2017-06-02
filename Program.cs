@@ -11,6 +11,18 @@ namespace genPanoSkin
 
             Console.WriteLine("Running Application...");
 
+            /*
+                This is the re-program procedures
+
+                1. Read skin xml template
+
+                2. Replace some of nodes 
+
+                3. Clone the element node
+
+                4. Replay until last pano data
+             */
+
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc = GetPanoProject(xmlDoc);
 
