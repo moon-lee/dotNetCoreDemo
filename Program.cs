@@ -27,6 +27,21 @@ namespace genPanoSkin
             xmlDoc = GetPanoProject(xmlDoc);
 
             XmlElement oldRootNode = xmlDoc.DocumentElement;
+
+            /*
+                Location Path Expression
+
+                A step consists of:
+
+                    * an axis (defines the tree-relationship between the selected nodes and the current node)
+                    * a node-test (identifies a node within an axis)
+                    * zero or more predicates (to further refine the selected node-set)
+
+                The syntax for a location step is:
+
+                axisname::nodetest[predicate]
+
+             */
             XmlNode oldTourNode = oldRootNode.SelectSingleNode("tour");
             XmlNode newTourNode = CreateNewPanoProjectFile(xmlDoc);
 
@@ -39,7 +54,7 @@ namespace genPanoSkin
 
         static XmlDocument GetPanoProject(XmlDocument xmlDoc)
         {
-            string path = @"PanoProjectTemplate.p2vr";
+            string path = GetP2vrTempFile();
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
             {
                 using (var sr = new StreamReader(fs))
@@ -52,7 +67,7 @@ namespace genPanoSkin
 
         static XmlNode CreateNewPanoProjectFile(XmlDocument xmlDoc)
         {
-            string path = @"PanoData.csv";
+            string path = GetPanoDataFile();
 
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
             {
@@ -99,14 +114,14 @@ namespace genPanoSkin
             pd.forwardSpot = bool.Parse(items[6].ToString());
             pd.backwardSpot = bool.Parse(items[7].ToString());
             pd.leftSpot = bool.Parse(items[8].ToString());
-            pd.rightSpot = bool.Parse(items[9].ToString()); 
-            pd.fwdNode = items[10]; 
-            pd.bwdNode = items[11]; 
+            pd.rightSpot = bool.Parse(items[9].ToString());
+            pd.fwdNode = items[10];
+            pd.bwdNode = items[11];
 
-            pd.leftNode = items[12]; 
-            pd.rightNode = items[13]; 
+            pd.leftNode = items[12];
+            pd.rightNode = items[13];
 
-            Console.WriteLine("Node Id :{0}",pd.nodeId);
+            Console.WriteLine("Node Id :{0}", pd.nodeId);
             // Console.WriteLine("Image filename :{0}",pd.filename);
             // Console.WriteLine("Pano Title :{0}",pd.title);
             // Console.WriteLine("Pano North :{0}",pd.panoNorth);
@@ -147,11 +162,11 @@ namespace genPanoSkin
 
             if (pd.forwardSpot)
             {
-                spotxml = String.Format(pd.fwdXml,pd.fwdNode);
+                spotxml = String.Format(pd.fwdXml, pd.fwdNode);
             }
             if (pd.backwardSpot)
             {
-                spotxml += String.Format(pd.bwdXml,pd.bwdNode);
+                spotxml += String.Format(pd.bwdXml, pd.bwdNode);
             }
             if (pd.leftSpot)
             {
@@ -175,7 +190,7 @@ namespace genPanoSkin
 
         static void WriteXmlfile(XmlDocument xmlDoc)
         {
-            string path = @"NewPanoProject.p2vr";
+            string path = GetNewP2vrFile();
 
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite))
             {
@@ -189,6 +204,26 @@ namespace genPanoSkin
             }
         }
 
+        static string GetP2vrTempFile()
+        {
+            string file = Directory.GetCurrentDirectory();
+            file += @"\template\PanoProjectTemplate.p2vr";
+            return file;
+        }
+
+        static string GetPanoDataFile()
+        {
+            string file = Directory.GetCurrentDirectory();
+            file += @"\input\PanoData.csv";
+            return file;
+        }
+
+        static string GetNewP2vrFile()
+        {
+            string file = Directory.GetCurrentDirectory();
+            file += @"\output\NewPanoProject.p2vr";
+            return file;
+        }
     }
 
     public class Panodata
