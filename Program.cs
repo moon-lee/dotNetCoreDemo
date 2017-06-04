@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace genPanoSkin
 {
@@ -11,45 +14,73 @@ namespace genPanoSkin
 
             Console.WriteLine("Running Application...");
 
-            /*
-                This is the re-program procedures
+            XElement xElem = GetPanoXml();
 
-                1. Read skin xml template
+            IEnumerable<XElement> de = from tour in xElem.Descendants("tour") select tour;
 
-                2. Replace some of nodes 
+            
+            foreach (XElement tour in de)
+                Console.WriteLine(tour.Name);
 
-                3. Clone the element node
 
-                4. Replay until last pano data
-             */
+            // /*
+            //     This is the re-program procedures
 
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc = GetPanoProject(xmlDoc);
+            //     1. Read skin xml template
 
-            XmlElement oldRootNode = xmlDoc.DocumentElement;
+            //     2. Replace some of nodes 
 
-            /*
-                Location Path Expression
+            //     3. Clone the element node
 
-                A step consists of:
+            //     4. Replay until last pano data
+            //  */
 
-                    * an axis (defines the tree-relationship between the selected nodes and the current node)
-                    * a node-test (identifies a node within an axis)
-                    * zero or more predicates (to further refine the selected node-set)
+            // XmlDocument xmlDoc = new XmlDocument();
+            // xmlDoc = GetPanoProject(xmlDoc);
 
-                The syntax for a location step is:
+            // XmlElement oldRootNode = xmlDoc.DocumentElement;
 
-                axisname::nodetest[predicate]
+            // /*
+            //     Location Path Expression
 
-             */
-            XmlNode oldTourNode = oldRootNode.SelectSingleNode("tour");
-            XmlNode newTourNode = CreateNewPanoProjectFile(xmlDoc);
+            //     A step consists of:
 
-            oldTourNode.ParentNode.ReplaceChild(newTourNode, oldTourNode);
+            //         * an axis (defines the tree-relationship between the selected nodes and the current node)
+            //         * a node-test (identifies a node within an axis)
+            //         * zero or more predicates (to further refine the selected node-set)
 
-            WriteXmlfile(xmlDoc);
+            //     The syntax for a location step is:
 
-            Console.WriteLine("Job done...");
+            //     axisname::nodetest[predicate]
+
+            //  */
+            // XmlNode oldTourNode = oldRootNode.SelectSingleNode("tour");
+            // XmlNode newTourNode = CreateNewPanoProjectFile(xmlDoc);
+
+            // oldTourNode.ParentNode.ReplaceChild(newTourNode, oldTourNode);
+
+            // WriteXmlfile(xmlDoc);
+
+            // Console.WriteLine("Job done...");
+        }
+
+        private static XElement GetPanoXml()
+        {
+
+            XElement xElem;
+
+            string path = GetP2vrTempFile();
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
+            {
+                using (var sr = new StreamReader(fs))
+                {
+                     xElem =XElement.Load(sr);
+
+                }
+            }
+
+            return xElem;
+
         }
 
         static XmlDocument GetPanoProject(XmlDocument xmlDoc)
