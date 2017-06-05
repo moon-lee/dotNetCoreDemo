@@ -16,21 +16,27 @@ namespace genPanoSkin
 
             XElement xElem = GetPanoSkinFile();
 
-            // XElement xmlTree2 = new XElement("element",
-            //                     from el in xElem.Elements()
-            //                     where ((string)el.Element("type") == "mark")
-            //                     select el);
+            XElement xmlTree = new XElement("element",
+                                from el in xElem.Elements().Descendants()
+                                select el);
+
+            XElement xmlTree1 = new XElement("element",
+                                from el in xElem.Elements().Descendants()
+                                where ((string)el.Element("type") == "mark" &&
+                                       (string)el.Element("id") == "markertemplate")
+                                select el);
+
 
             XElement xmlTree2 = new XElement("element",
                                 from el in xElem.Elements().Descendants()
-                                where (string)el.Element("type") == "mark"
+                                where ((string)el.Element("type") == "mark" &&
+                                       (string)el.Element("id") == "marker_node139")
                                 select el);
 
-            Console.WriteLine(xmlTree2);
             
-            // XElement oldTourElements = xElem.Element("tour");
-            // oldTourElements.ReplaceWith(GenerateNewPanoProjectFile());
-            SaveXmlfile(xmlTree2);      
+            SaveXmlfile("elements.xml", xmlTree);      
+            SaveXmlfile("type_containter_elements.xml", xmlTree1);      
+            SaveXmlfile("type_mark_elements.xml", xmlTree2);      
 
             Console.WriteLine("Job done...");
         }
@@ -181,11 +187,9 @@ namespace genPanoSkin
         }
 
 
-       static void SaveXmlfile(XElement xmlDoc)
+       static void SaveXmlfile(string fname, XElement xmlDoc)
         {
-            string path = AppConfig.NewSkinFile;
-
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite))
+            using (var fs = new FileStream(fname, FileMode.Create, FileAccess.ReadWrite))
             {
                 using (var sr = new StreamWriter(fs))
                 {
@@ -230,9 +234,11 @@ namespace genPanoSkin
         private static string skinFile = @"skin.xml";
         private static string panoDataFile = @"PanoData.csv";
         private static string newSkinFile = @"NewSkin.xml";
+        private static string testXmlFile = @"Test.xml";
 
         public static string SkinFile { get => skinFile; set => skinFile = value; }
         public static string PanoDataFile { get => panoDataFile; set => panoDataFile = value; }
         public static string NewSkinFile { get => newSkinFile; set => newSkinFile = value; }
+        public static string TestXmlFile { get => testXmlFile; set => testXmlFile = value; }
     }
 }
