@@ -14,20 +14,33 @@ namespace genPanoSkin
 
             Console.WriteLine("Running Application...");
 
-            XElement xElem = GetPanoProjectFile();
-            XElement oldTourElements = xElem.Element("tour");
-            oldTourElements.ReplaceWith(GenerateNewPanoProjectFile());
-            SaveXmlfile(xElem);      
+            XElement xElem = GetPanoSkinFile();
+
+            // XElement xmlTree2 = new XElement("element",
+            //                     from el in xElem.Elements()
+            //                     where ((string)el.Element("type") == "mark")
+            //                     select el);
+
+            XElement xmlTree2 = new XElement("element",
+                                from el in xElem.Elements().Descendants()
+                                where (string)el.Element("type") == "mark"
+                                select el);
+
+            Console.WriteLine(xmlTree2);
+            
+            // XElement oldTourElements = xElem.Element("tour");
+            // oldTourElements.ReplaceWith(GenerateNewPanoProjectFile());
+            SaveXmlfile(xmlTree2);      
 
             Console.WriteLine("Job done...");
         }
 
-        private static XElement GetPanoProjectFile()
+        private static XElement GetPanoSkinFile()
         {
 
             XElement xElem;
 
-            string path = AppConfig.P2vrTempFile;
+            string path = AppConfig.SkinFile;
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
             {
                 using (var sr = new StreamReader(fs))
@@ -170,7 +183,7 @@ namespace genPanoSkin
 
        static void SaveXmlfile(XElement xmlDoc)
         {
-            string path = AppConfig.NewP2vrFile;
+            string path = AppConfig.NewSkinFile;
 
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite))
             {
@@ -214,12 +227,12 @@ namespace genPanoSkin
 
     public static class AppConfig
     {
-        private static string p2vrTempFile = @"PanoProjectTemplate.p2vr";
+        private static string skinFile = @"skin.xml";
         private static string panoDataFile = @"PanoData.csv";
-        private static string newP2vrFile = @"NewPanoProject.p2vr";
+        private static string newSkinFile = @"NewSkin.xml";
 
-        public static string P2vrTempFile { get => p2vrTempFile; set => p2vrTempFile = value; }
+        public static string SkinFile { get => skinFile; set => skinFile = value; }
         public static string PanoDataFile { get => panoDataFile; set => panoDataFile = value; }
-        public static string NewP2vrFile { get => newP2vrFile; set => newP2vrFile = value; }
+        public static string NewSkinFile { get => newSkinFile; set => newSkinFile = value; }
     }
 }
