@@ -14,57 +14,15 @@ namespace genPanoSkin
 
             Console.WriteLine("Running Application...");
 
-            XElement xElem = GetPanoXml();
+            XElement xElem = GetPanoProjectFile();
+            XElement oldTourElements = xElem.Element("tour");
+            oldTourElements.ReplaceWith(GenerateNewPanoProjectFile());
+            SaveXmlfile(xElem);      
 
-            IEnumerable<XElement> de = from tour in xElem.Descendants("tour") select tour;
-
-            
-            foreach (XElement tour in de)
-                Console.WriteLine(tour.Name);
-
-
-            // /*
-            //     This is the re-program procedures
-
-            //     1. Read skin xml template
-
-            //     2. Replace some of nodes 
-
-            //     3. Clone the element node
-
-            //     4. Replay until last pano data
-            //  */
-
-            // XmlDocument xmlDoc = new XmlDocument();
-            // xmlDoc = GetPanoProject(xmlDoc);
-
-            // XmlElement oldRootNode = xmlDoc.DocumentElement;
-
-            // /*
-            //     Location Path Expression
-
-            //     A step consists of:
-
-            //         * an axis (defines the tree-relationship between the selected nodes and the current node)
-            //         * a node-test (identifies a node within an axis)
-            //         * zero or more predicates (to further refine the selected node-set)
-
-            //     The syntax for a location step is:
-
-            //     axisname::nodetest[predicate]
-
-            //  */
-            // XmlNode oldTourNode = oldRootNode.SelectSingleNode("tour");
-            // XmlNode newTourNode = CreateNewPanoProjectFile(xmlDoc);
-
-            // oldTourNode.ParentNode.ReplaceChild(newTourNode, oldTourNode);
-
-            // WriteXmlfile(xmlDoc);
-
-            // Console.WriteLine("Job done...");
+            Console.WriteLine("Job done...");
         }
 
-        private static XElement GetPanoXml()
+        private static XElement GetPanoProjectFile()
         {
 
             XElement xElem;
@@ -74,8 +32,7 @@ namespace genPanoSkin
             {
                 using (var sr = new StreamReader(fs))
                 {
-                     xElem =XElement.Load(sr);
-
+                    xElem = XElement.Load(sr);
                 }
             }
 
@@ -83,20 +40,8 @@ namespace genPanoSkin
 
         }
 
-        static XmlDocument GetPanoProject(XmlDocument xmlDoc)
-        {
-            string path = GetP2vrTempFile();
-            using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
-            {
-                using (var sr = new StreamReader(fs))
-                {
-                    xmlDoc.Load(sr);
-                }
-            }
-            return xmlDoc;
-        }
 
-        static XmlNode CreateNewPanoProjectFile(XmlDocument xmlDoc)
+        static XElement GenerateNewPanoProjectFile()
         {
             string path = GetPanoDataFile();
 
@@ -105,30 +50,30 @@ namespace genPanoSkin
                 using (var sr = new StreamReader(fs))
                 {
                     string line;
-                    // Create New Tour Node 
-                    XmlNode childRootNode = xmlDoc.CreateElement("tour");
-
-                    // Set Start Tour Node
-                    XmlNode startNode = xmlDoc.CreateElement("start");
-                    startNode.InnerText = "node1";
-                    childRootNode.AppendChild(startNode);
-
                     Panodata pd = new Panodata();
 
+                    XElement tourElem = new XElement("tour");
+                    XElement startElem = new XElement("start", "node1");
+                    tourElem.Add(startElem);
+
+                    XElement childElems = null;
                     // Skip First Line 
                     sr.ReadLine();
 
                     while ((line = sr.ReadLine()) != null)
                     {
                         pd = ReadPanoData(pd, line);
-                        childRootNode.AppendChild(GeneratePanoXml(xmlDoc, pd));
-
+                        childElems = GeneratePanoElements(childElems,pd);
+                        tourElem.Add(childElems);
                     }
+   
+                   // Console.WriteLine(tourElem);
 
-                    return childRootNode;
+                    return tourElem;
                 }
             }
         }
+
 
         static Panodata ReadPanoData(Panodata pd, String panodata)
         {
@@ -166,34 +111,33 @@ namespace genPanoSkin
 
         }
 
-        static XmlNode GeneratePanoXml(XmlDocument xmlDoc, Panodata pd)
+
+        static XElement GeneratePanoElements(XElement childElems, Panodata pd)
         {
+            XElement panorameElem = new XElement("panorama");
+            XElement panoIdElem = new XElement("id", pd.nodeId);
 
-            XmlNode childNodes = xmlDoc.CreateElement("panorama");
+            XElement inputElem = new XElement("input",
+                                 new XElement("type", "auto"),
+                                 new XElement("filename", pd.filename));
 
-            XmlNode panoId = xmlDoc.CreateElement("id");
-            panoId.InnerText = pd.nodeId;
+            XElement viewingElem = new XElement("viewingparameter",
+                                   new XElement("pan", new XElement("start", pd.viewPan)),
+                                   new XElement("tilt", new XElement("start", 0)),
+                                   new XElement("fov", new XElement("start", 100)),
+                                   new XElement("panonorth", pd.panoNorth),
+                                   new XElement("projection", "rectilinear"));
 
-            // Input
-            XmlNode inputNode = xmlDoc.CreateElement("input");
-            inputNode.InnerXml = String.Format("<type>auto</type><filename>{0}</filename>", pd.filename);
-
-            //Viewingparameter
-            XmlNode viewParam = xmlDoc.CreateElement("viewingparameter");
-            viewParam.InnerXml = String.Format("<pan><start>{0}</start></pan><tilt><start>0</start></tilt><fov><start>100</start></fov><panonorth>{1}</panonorth><projection>rectilinear</projection>", pd.viewPan, pd.panoNorth);
-
-            //Userdata
-            XmlNode userdataNode = xmlDoc.CreateElement("userdata");
-            userdataNode.InnerXml = String.Format("<title>{0}</title>", pd.title);
+            XElement userdataElem = new XElement("userdata",
+                                    new XElement("title", pd.title));
 
             //Hotspots
-            XmlNode hotspotsNode = xmlDoc.CreateElement("hotspots");
 
-            string spotxml = hotspotsNode.InnerXml;
+            string spotxml = "<hotspots>";
 
             if (pd.forwardSpot)
             {
-                spotxml = String.Format(pd.fwdXml, pd.fwdNode);
+                spotxml += String.Format(pd.fwdXml, pd.fwdNode);
             }
             if (pd.backwardSpot)
             {
@@ -208,18 +152,23 @@ namespace genPanoSkin
                 spotxml += String.Format(pd.rightXml, pd.rightNode);
             }
 
-            hotspotsNode.InnerXml = spotxml;
+            spotxml += "</hotspots>";
+            
+            XElement hotspotsElem = XElement.Parse(spotxml);
 
-            childNodes.AppendChild(panoId);
-            childNodes.AppendChild(inputNode);
-            childNodes.AppendChild(viewParam);
-            childNodes.AppendChild(userdataNode);
-            childNodes.AppendChild(hotspotsNode);
+            panorameElem.Add(panoIdElem);
+            panorameElem.Add(inputElem);
+            panorameElem.Add(viewingElem);
+            panorameElem.Add(userdataElem);
+            panorameElem.Add(hotspotsElem);
 
-            return childNodes;
+            return childElems = panorameElem;
+
+            // Console.WriteLine(tourElem);
         }
 
-        static void WriteXmlfile(XmlDocument xmlDoc)
+
+       static void SaveXmlfile(XElement xmlDoc)
         {
             string path = GetNewP2vrFile();
 
@@ -227,32 +176,30 @@ namespace genPanoSkin
             {
                 using (var sr = new StreamWriter(fs))
                 {
-                    XmlWriterSettings settings = new XmlWriterSettings();
-                    settings.Indent = true;
-                    XmlWriter writer = XmlWriter.Create(sr, settings);
-                    xmlDoc.Save(writer);
+                    XmlWriter writer = XmlWriter.Create(sr);
+
+                    xmlDoc.Save(sr);
                 }
             }
         }
-
         static string GetP2vrTempFile()
         {
             string file = Directory.GetCurrentDirectory();
-            file += @"\template\PanoProjectTemplate.p2vr";
+            file += @"/template/PanoProjectTemplate.p2vr";
             return file;
         }
 
         static string GetPanoDataFile()
         {
             string file = Directory.GetCurrentDirectory();
-            file += @"\input\PanoData.csv";
+            file += @"/input/PanoData.csv";
             return file;
         }
 
         static string GetNewP2vrFile()
         {
             string file = Directory.GetCurrentDirectory();
-            file += @"\output\NewPanoProject.p2vr";
+            file += @"/output/NewPanoProject.p2vr";
             return file;
         }
     }
