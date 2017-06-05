@@ -21,10 +21,10 @@ namespace genPanoSkin
                                 select el);
 
             XElement xmlTree1 = new XElement("element",
-                                from el in xElem.Elements().Descendants()
+                                (from el in xElem.Elements().Descendants()
                                 where ((string)el.Element("type") == "mark" &&
                                        (string)el.Element("id") == "markertemplate")
-                                select el);
+                                select el).SingleOrDefault());
 
 
             XElement xmlTree2 = new XElement("element",
