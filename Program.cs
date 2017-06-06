@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace genPanoSkin
 {
@@ -33,10 +34,18 @@ namespace genPanoSkin
                                        (string)el.Element("id") == "marker_node139")
                                 select el);
 
-            
+            XElement xmlTree3 = new XElement("element",
+                                from el in xElem.Elements().Descendants()
+                                where ((string)el.Element("type") == "image" &&
+                                       Regex.IsMatch((string)el.Element("id"),"Firstfloor",RegexOptions.IgnoreCase))
+                                select el);
+
+
+
             SaveXmlfile("elements.xml", xmlTree);      
             SaveXmlfile("type_containter_elements.xml", xmlTree1);      
             SaveXmlfile("type_mark_elements.xml", xmlTree2);      
+            SaveXmlfile("type_image_elements.xml", xmlTree3);      
 
             Console.WriteLine("Job done...");
         }
